@@ -143,6 +143,54 @@ public:
     }
 };
 
+class Inventory {
+private:
+    vector<Entity*> items;
+
+public:
+    void addItem(Entity* item) {
+        items.push_back(item);
+    }
+
+    void printInventory() const {
+        cout << "Inventory: " << endl;
+        for (const Entity* item : items) {
+            item->print();
+        }
+    }
+
+    const vector<Entity*>& getItems() const {
+        return items;
+    }
+};
+
+class Player {
+private:
+    string name;
+    Inventory inventory;
+
+public:
+    Player(const string& name) : name(name) {}
+
+    void addItemToInventory(Entity* item) {
+        inventory.addItem(item);
+    }
+
+    void print() const {
+        cout << "Player: " << name << endl;
+        inventory.printInventory();
+    }
+
+    Inventory& getInventory() {
+        return inventory;
+    }
+
+    string getName() const {
+        return name;
+    }
+};
+
+
 int main() {
     srand(static_cast<unsigned int>(time(0)));
 
