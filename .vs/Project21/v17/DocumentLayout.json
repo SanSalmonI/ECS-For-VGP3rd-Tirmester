@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\ssalm\\source\\repos\\Project21\\ECS-For-VGP3rd-Tirmester\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{661A1D9F-0606-4837-A6DC-05AA8F9C433B}|Project21.vcxproj|C:\\Users\\ssalm\\source\\repos\\Project21\\ECS-For-VGP3rd-Tirmester\\ECS.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{661A1D9F-0606-4837-A6DC-05AA8F9C433B}|Project21.vcxproj|solutionrelative:ECS.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ECS.cpp",
+              "DocumentMoniker": "C:\\Users\\ssalm\\source\\repos\\Project21\\ECS-For-VGP3rd-Tirmester\\ECS.cpp",
+              "RelativeDocumentMoniker": "ECS.cpp",
+              "ToolTip": "C:\\Users\\ssalm\\source\\repos\\Project21\\ECS-For-VGP3rd-Tirmester\\ECS.cpp",
+              "RelativeToolTip": "ECS.cpp",
+              "ViewState": "AQIAAFQAAAAAAAAAAAAAAGMAAABkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-06-13T20:07:17.348Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
