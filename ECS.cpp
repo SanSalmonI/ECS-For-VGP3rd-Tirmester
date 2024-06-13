@@ -24,6 +24,7 @@ private:
     string name;
     int hp;
 
+
 public:
     Entity(const string& name, int hp) : name(name), hp(hp) {}
 
@@ -181,7 +182,7 @@ public:
         inventory.printInventory();
     }
 
-    Inventory& getInventory() {
+    Inventory& getInventory() { 
         return inventory;
     }
 
@@ -272,14 +273,25 @@ int main() {
 	entityLight1->addComponent(&light);
 	entityLight2->addComponent(&light);
 
-
-
-
     System battleSystem;
 
-    battleSystem.update(entity1, entity2);
-    battleSystem.update(entity2, entity3);
-    battleSystem.update(entity3, entity1);
+	cout << "Please input yor name: " << endl;
+	string playerName;
+	cin >> playerName;
+	Player player(playerName);
+
+	cout << "Welcome to the ECS Battle Simulator!" << endl;
+	cout << "Choose 5 items to store, youll fight with these items against 3 oponents:" << endl;
+
+	//player inputs name of item, it gets asigned a class and health and stored in the player inventory.
+
+	cout << "youll fight against 3 oponents, beat them and get their items for your next battle!" << endl << "Good Luck!"<<endl;
+
+	//first battle
+	//second battle
+	//third battle
+
+	cout << "Congratulations! You have won the game!" << endl;
 
     return 0;
 }
