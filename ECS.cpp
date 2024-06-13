@@ -157,17 +157,75 @@ int main() {
 
     EntityManager entityManager;
 
-    Entity* entity1 = entityManager.createEntity("Entity1", 50);
-    Entity* entity2 = entityManager.createEntity("Entity2", 60);
-    Entity* entity3 = entityManager.createEntity("Entity3", 45);
+    Entity* entity1 = entityManager.createEntity("Marble Statue", 5);
+	Entity* entityRock1 = entityManager.createEntity("Diamond", 10);
+	Entity* entityRock2 = entityManager.createEntity("Dumbell", 8);
+
+    Entity* entity2 = entityManager.createEntity("Soda Can", 6);
+	Entity* entityMetal1 = entityManager.createEntity("Car", 9);
+	Entity* entityMetal2 = entityManager.createEntity("Pocket Knife", 7);
+
+    Entity* entity3 = entityManager.createEntity("Bic Lighter", 4);
+	Entity* entityFire1 = entityManager.createEntity("Grill", 8);
+	Entity* entityFire2 = entityManager.createEntity("Smooore", 6);
+
+	Entity* entity4 = entityManager.createEntity("Puppy", 7);
+	Entity* entityOrganic1 = entityManager.createEntity("Tadpole", 10);
+	Entity* entityOrganic2 = entityManager.createEntity("Pond scum", 6);
+
+	Entity* entity5 = entityManager.createEntity("CPU", 8);
+	Entity* entityElectric1 = entityManager.createEntity("Taser", 10);
+	Entity* entityElectric2 = entityManager.createEntity("Microwave", 7);
+
+
+	Entity* entity6 = entityManager.createEntity("Lawn Chair", 9);
+	Entity* entityPlastic1 = entityManager.createEntity("Coathanger", 10);
+	Entity* entityPlastic2 = entityManager.createEntity("Plastic Bag", 7);
+
+	Entity* entity7 = entityManager.createEntity("Stock Trade", 5); 
+	Entity* entityConcept1 = entityManager.createEntity("Internet", 6);
+	Entity* entityConcept2 = entityManager.createEntity("Patent", 8);
+
+	Entity* entity8 = entityManager.createEntity("Lightbulb", 6);
+	Entity* entityLight1 = entityManager.createEntity("Laser", 10);
+	Entity* entityLight2 = entityManager.createEntity("Flashlight", 7);
 
     entity1->addComponent(&rock);
-    entity2->addComponent(&metal);
-    entity3->addComponent(&fire);
+    entityRock1->addComponent(&rock);
+	entityRock2->addComponent(&rock);
 
-    entity1->print();
-    entity2->print();
-    entity3->print();
+
+    entity2->addComponent(&metal);
+	entityMetal1->addComponent(&metal);
+    entityMetal2->addComponent(&metal);
+
+
+    entity3->addComponent(&fire);
+	entityFire1->addComponent(&fire);
+	entityFire2->addComponent(&fire);
+
+	entity4->addComponent(&organic);
+	entityOrganic1->addComponent(&organic);
+	entityOrganic2->addComponent(&organic);
+
+	entity5->addComponent(&electric);
+	entityElectric1->addComponent(&electric);
+	entityElectric2->addComponent(&electric);
+
+	entity6->addComponent(&plastic);
+	entityPlastic1->addComponent(&plastic);
+	entityPlastic2->addComponent(&plastic);
+
+	entity7->addComponent(&conceptual);
+	entityConcept1->addComponent(&conceptual);
+	entityConcept2->addComponent(&conceptual);
+
+	entity8->addComponent(&light);
+	entityLight1->addComponent(&light);
+	entityLight2->addComponent(&light);
+
+
+
 
     System battleSystem;
 
