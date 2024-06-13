@@ -284,6 +284,16 @@ int main() {
 	cout << "Choose 5 items to store, youll fight with these items against 3 oponents:" << endl;
 
 	//player inputs name of item, it gets asigned a class and health and stored in the player inventory.
+    for (int i = 0; i < 5; i++)
+    {
+        cout << "Input the name item" << i << ":" << endl;
+        string itemName;
+        cin >> itemName;
+    
+		int itemHealth = rand() % 6 + 5;
+		cout << "Item health: " << itemHealth << endl;
+
+    }
 
 	cout << "youll fight against 3 oponents, beat them and get their items for your next battle!" << endl << "Good Luck!"<<endl;
 
