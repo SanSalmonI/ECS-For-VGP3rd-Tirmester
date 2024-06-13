@@ -6,8 +6,6 @@
 
 using namespace std;
 
-// This is a test to merge ibis changes through Git
-
 class Component {
 private:
     string name;
