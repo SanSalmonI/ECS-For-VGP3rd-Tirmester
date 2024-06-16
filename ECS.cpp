@@ -23,10 +23,11 @@ private:
     vector<Component*> components;
     string name;
     int hp;
+    int ownerID = 0;
 
 
 public:
-    Entity(const string& name, int hp) : name(name), hp(hp) {}
+    Entity(const std::string& name, int hp, int ownerID) : name(name), hp(hp), ownerID(ownerID) {}
 
     void addComponent(Component* c) {
         components.push_back(c);
@@ -54,11 +55,44 @@ public:
         return name;
     }
 
+    int getOwnerID() const {
+        return ownerID;
+    }
+
+    void setOwnerID(int newOwnerID) {
+        ownerID = newOwnerID;
+    }
+
     const vector<Component*>& getComponents() const {
         return components;
     }
 };
 
+class Actor {
+private:
+    string name;
+    vector<Entity*> inventory;
+    int ownerID;
+
+public:
+    Actor(const string& name, int ownerID) : name(name), ownerID(ownerID) {}
+
+    string getName() const {
+        return name;
+    }
+
+    void addItemToInventory(Entity* item) {
+        item->setOwnerID(ownerID);
+        inventory.push_back(item);
+
+    }
+
+   //
+
+    int getOwnerID() const {
+        return ownerID;
+    }
+};
 class System {
 public:
     void update(Entity* e1, Entity* e2) {
@@ -133,61 +167,14 @@ public:
         }
     }
 
-    Entity* createEntity(const string& name, int hp) {
-        Entity* entity = new Entity(name, hp);
-        entities.push_back(entity);
-        return entity;
+    Entity* createEntity(const string& name, int hp, int ownerID) {
+        Entity* e = new Entity(name, hp, ownerID);
+        entities.push_back(e);
+        return e;
     }
 
     const vector<Entity*>& getEntities() const {
         return entities;
-    }
-};
-
-class Inventory {
-private:
-    vector<Entity*> items;
-
-public:
-    void addItem(Entity* item) {
-        items.push_back(item);
-    }
-
-    void printInventory() const {
-        cout << "Inventory: " << endl;
-        for (const Entity* item : items) {
-            item->print();
-        }
-    }
-
-    const vector<Entity*>& getItems() const {
-        return items;
-    }
-};
-
-class Player {
-private:
-    string name;
-    Inventory inventory;
-
-public:
-    Player(const string& name) : name(name) {}
-
-    void addItemToInventory(Entity* item) {
-        inventory.addItem(item);
-    }
-
-    void print() const {
-        cout << "Player: " << name << endl;
-        inventory.printInventory();
-    }
-
-    Inventory& getInventory() { 
-        return inventory;
-    }
-
-    string getName() const {
-        return name;
     }
 };
 
@@ -206,38 +193,38 @@ int main() {
 
     EntityManager entityManager;
 
-    Entity* entity1 = entityManager.createEntity("Marble Statue", 5);
-	Entity* entityRock1 = entityManager.createEntity("Diamond", 10);
-	Entity* entityRock2 = entityManager.createEntity("Dumbell", 8);
+    Entity* entity1 = entityManager.createEntity("Marble Statue", 5, 0);
+	Entity* entityRock1 = entityManager.createEntity("Diamond", 10, 0);
+	Entity* entityRock2 = entityManager.createEntity("Dumbell", 8, 0);
 
-    Entity* entity2 = entityManager.createEntity("Soda Can", 6);
-	Entity* entityMetal1 = entityManager.createEntity("Car", 9);
-	Entity* entityMetal2 = entityManager.createEntity("Pocket Knife", 7);
+    Entity* entity2 = entityManager.createEntity("Soda Can", 6, 0);
+	Entity* entityMetal1 = entityManager.createEntity("Car", 9, 0);
+	Entity* entityMetal2 = entityManager.createEntity("Pocket Knife", 7, 0);
 
-    Entity* entity3 = entityManager.createEntity("Bic Lighter", 4);
-	Entity* entityFire1 = entityManager.createEntity("Grill", 8);
-	Entity* entityFire2 = entityManager.createEntity("Smooore", 6);
+    Entity* entity3 = entityManager.createEntity("Bic Lighter", 4, 0);
+	Entity* entityFire1 = entityManager.createEntity("Grill", 8, 0);
+	Entity* entityFire2 = entityManager.createEntity("Smooore", 6, 0);
 
-	Entity* entity4 = entityManager.createEntity("Puppy", 7);
-	Entity* entityOrganic1 = entityManager.createEntity("Tadpole", 10);
-	Entity* entityOrganic2 = entityManager.createEntity("Pond scum", 6);
+	Entity* entity4 = entityManager.createEntity("Puppy", 7, 0);
+	Entity* entityOrganic1 = entityManager.createEntity("Tadpole", 10, 0);
+	Entity* entityOrganic2 = entityManager.createEntity("Pond scum", 6, 0);
 
-	Entity* entity5 = entityManager.createEntity("CPU", 8);
-	Entity* entityElectric1 = entityManager.createEntity("Taser", 10);
-	Entity* entityElectric2 = entityManager.createEntity("Microwave", 7);
+	Entity* entity5 = entityManager.createEntity("CPU", 8, 0);
+	Entity* entityElectric1 = entityManager.createEntity("Taser", 10, 0);
+	Entity* entityElectric2 = entityManager.createEntity("Microwave", 7, 0);
 
 
-	Entity* entity6 = entityManager.createEntity("Lawn Chair", 9);
-	Entity* entityPlastic1 = entityManager.createEntity("Coathanger", 10);
-	Entity* entityPlastic2 = entityManager.createEntity("Plastic Bag", 7);
+	Entity* entity6 = entityManager.createEntity("Lawn Chair", 9, 0);
+	Entity* entityPlastic1 = entityManager.createEntity("Coathanger", 10, 0);
+	Entity* entityPlastic2 = entityManager.createEntity("Plastic Bag", 7, 0);
 
-	Entity* entity7 = entityManager.createEntity("Stock Trade", 5); 
-	Entity* entityConcept1 = entityManager.createEntity("Internet", 6);
-	Entity* entityConcept2 = entityManager.createEntity("Patent", 8);
+	Entity* entity7 = entityManager.createEntity("Stock Trade", 5, 0);
+	Entity* entityConcept1 = entityManager.createEntity("Internet", 6, 0);
+	Entity* entityConcept2 = entityManager.createEntity("Patent", 8, 0);
 
-	Entity* entity8 = entityManager.createEntity("Lightbulb", 6);
-	Entity* entityLight1 = entityManager.createEntity("Laser", 10);
-	Entity* entityLight2 = entityManager.createEntity("Flashlight", 7);
+	Entity* entity8 = entityManager.createEntity("Lightbulb", 6, 0);
+	Entity* entityLight1 = entityManager.createEntity("Laser", 10, 0);
+	Entity* entityLight2 = entityManager.createEntity("Flashlight", 7, 0);
 
     entity1->addComponent(&rock);
     entityRock1->addComponent(&rock);
@@ -275,10 +262,13 @@ int main() {
 
     System battleSystem;
 
+    Actor player1("Player 1", 0);
+
+    player1.printInventory();
+
 	cout << "Please input yor name: " << endl;
 	string playerName;
 	cin >> playerName;
-	Player player(playerName);
 
 	cout << "Welcome to the ECS Battle Simulator!" << endl;
 	cout << "Choose 5 items to store, youll fight with these items against 3 oponents:" << endl;
