@@ -295,7 +295,7 @@ int main() {
 
     }
 
-	cout << "youll fight against 3 oponents, beat them and get their items for your next battle!" << endl << "Good Luck!"<<endl;
+	cout << "You will fight against 3 oponents, beat them and get their items for your next battle!" << endl << "Good Luck!"<<endl;
 
 	//first battle
 	//second battle
