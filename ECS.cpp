@@ -127,11 +127,14 @@ public:
     int getOwnerID() const {
         return ownerID;
     }
+
+    const vector<Entity*>& getInventory() const {
+        return inventory;
+    }
 };
 
 class System {
 public:
-    //trash vv
     void update(Entity* e1, Entity* e2) {
         cout << "Battle between " << e1->getName() << " and " << e2->getName() << endl;
 
@@ -156,6 +159,12 @@ public:
         else {
             cout << e2->getName() << " is destroyed!" << endl;
             cout << e1->getName() << " wins the battle!" << endl;
+        }
+    }
+
+    void transferItems(Actor* winner, Actor* loser) {
+        for (Entity* item : loser->getInventory()) {
+            winner->addItemToInventory(item);
         }
     }
 
@@ -191,8 +200,6 @@ private:
 
         return static_cast<int>(baseDamage * multiplier);
     }
-
-    //function to add defeated enemy's items to player's inventory after battle
 };
 
 int main() {
@@ -275,7 +282,6 @@ int main() {
 
     System battleSystem;
 
-    //create and assign items to enemies
     Actor enemy1("Kaleb", 1);
     Actor enemy2("Salmn", 2);
     Actor enemy3("Habibi", 3);//change this, or not idk
@@ -291,9 +297,9 @@ int main() {
 
     Actor player(playerName, 0);
 
-    for (Entity* e : entityManager.getEntities()) {
+    /*for (Entity* e : entityManager.getEntities()) {
         player.addItemToInventory(e);
-    }
+    }*/
     
     player.printInventory();
 
@@ -305,7 +311,6 @@ int main() {
 
     cout << "You will fight against 3 opponents, beat them and get their items for your next battle!" << endl << "Good Luck!" << endl;
 
-    // Placeholder for battle logic
     // Implement battle sequences here
 
     cout << "Congratulations! You have won the game!" << endl;
