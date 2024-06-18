@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 
 using namespace std;
 
@@ -168,6 +169,18 @@ public:
         }
     }
 
+    void assignEnemyItems(Actor& enemy, EntityManager& enemyAssign, int entityAssigned) {
+
+        vector <Entity*> entityAvailible = enemyAssign.getEntities();
+
+        random_shuffle(entityAvailible.begin(), entityAvailible.end());
+
+        for (int i = 0; i < entityAssigned && i < entityAvailible.size(); i++)
+        {
+            enemy.addItemToInventory(entityAvailible[i]);
+        }
+    }
+
 private:
     int calculateDamage(Entity* attacker, Entity* defender) {
         int baseDamage = rand() % 10 + 1;
@@ -280,15 +293,19 @@ int main() {
     entityLight1->addComponent(&light);
     entityLight2->addComponent(&light);
 
-    System battleSystem;
+    System System;
 
     Actor enemy1("Kaleb", 1);
     Actor enemy2("Salmn", 2);
-    Actor enemy3("Habibi", 3);//change this, or not idk
+    Actor enemy3("Ibi", 3); //change this, or not idk
     
+    //for loop to assign items to enemies 
+    // Player Chooses 5 cards at start of game...
+    System.assignEnemyItems(enemy1, entityManager, 5);   // Enemy1: Starts with 5 cards
 
+    System.assignEnemyItems(enemy1, entityManager, 9);   // Enemy2: Starts with 9 cards
 
-    //for loop to assign items to enemies
+    System.assignEnemyItems(enemy1, entityManager, 12);  // Enemy3: Starts with 12 cards
 
 
     cout << "Please input your name: ";
