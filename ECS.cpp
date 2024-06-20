@@ -4,7 +4,6 @@
 #include <ctime>
 #include <algorithm>
 #include <map>
-#include <conio.h>
 
 using namespace std;
 
@@ -322,11 +321,11 @@ int main() {
 
     //for loop to assign items to enemies 
     // Player Chooses 5 cards at start of game...
-    System.assignEnemyItems(enemy1, entityManager, 5);   // Enemy1: Starts with 5 cards
+    //System.assignEnemyItems(enemy1, entityManager, 5);   // Enemy1: Starts with 5 cards
 
-    System.assignEnemyItems(enemy1, entityManager, 9);   // Enemy2: Starts with 9 cards
+    //System.assignEnemyItems(enemy1, entityManager, 9);   // Enemy2: Starts with 9 cards
 
-    System.assignEnemyItems(enemy1, entityManager, 12);  // Enemy3: Starts with 12 cards
+    //System.assignEnemyItems(enemy1, entityManager, 12);  // Enemy3: Starts with 12 cards
 
     cout << "Welcome to the ECS Battle Simulator!" << endl;
 
@@ -344,7 +343,7 @@ start:
     cout << "How many items would you like to store? (Choose up to 5): ";
     cin >> playerChoice;
 
-    if (!playerChoice < 5 && !playerChoice > 1)
+    if (playerChoice < 5 && playerChoice > 1)
     {
         cout << "Invalid choice, please choose again." << endl;
         goto start;
@@ -367,8 +366,8 @@ start:
         playerItem[i]->print();
     }
     cout << "Press any key to continue..." << endl;
-    _getch();
-    // Implement battle sequences here
+   
+    // Implement battle sequences here  
 
     // Battle 1
     int cardChoice;
@@ -378,13 +377,13 @@ start:
         auto random = (rand() % enemy1.getInventory().size()) - 1;
         cout << "Choose a card to play: " << endl;
         cin >> cardChoice;
-        System.update(player.getInventory()[cardChoice - 1], enemy1.getInventory()[random]);
-        if (player.getInventory().at(cardChoice - 1)->getHP() <= 0)
+        System.update(player.getInventory()[cardChoice ], enemy1.getInventory()[random]);
+        if (player.getInventory().at(cardChoice)->getHP() <= 0)
         {
-            player.removeItemFromInventory(playerItem[cardChoice - 1]);
+            player.removeItemFromInventory(playerItem[cardChoice]);
             player.printInventory();
         }
-        else if (enemy1.getInventory().at(cardChoice - 1)->getHP() <= 0)
+        else if (enemy1.getInventory().at(cardChoice)->getHP() <= 0)
         {
             enemy1.removeItemFromInventory(enemy1.getInventory()[random]);
         }
@@ -392,10 +391,11 @@ start:
         {
             enemy1.removeItemFromInventory(enemy1.getInventory()[random]);
 
-            player.removeItemFromInventory(playerItem[cardChoice - 1]);
+            player.removeItemFromInventory(playerItem[cardChoice]);
             player.printInventory();
         }
     }
+
     if (enemy1.getInventory().size() == 0)
     {
         System.transferItems(&player, &enemy1);
@@ -409,6 +409,8 @@ start:
     // Fix the error when user selects an item out of the inventories range... 
 
     // Items do not get destroyed at some instances, and stay on -1 health, fix for removeitemfrominventory func? or something else?  
+
+
 
     cout << "Congratulations! You have won the game!" << endl;
 
