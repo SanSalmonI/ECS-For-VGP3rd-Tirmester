@@ -1,9 +1,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <cstdlib>
 #include <ctime>
 #include <algorithm>
+#include <map>
+#include <conio.h>
 
 using namespace std;
 
@@ -36,7 +37,6 @@ public:
     void print() const {
         cout << "Entity: " << name << endl;
         cout << "HP: " << hp << endl;
-        cout << "Owner ID: " << ownerID << endl;
         cout << "Components: ";
         for (const Component* c : components) {
             cout << c->getName() << " ";
@@ -113,6 +113,15 @@ public:
         return name;
     }
 
+    void removeItemFromInventory(Entity* item) {
+        for (auto it = inventory.begin(); it != inventory.end(); ++it) {
+            if (*it == item) {
+                inventory.erase(it);
+                break;
+            }
+        }
+    }
+
     void addItemToInventory(Entity* item) {
         item->setOwnerID(ownerID);
         inventory.push_back(item);
@@ -121,7 +130,7 @@ public:
     void printInventory() const {
         cout << name << "'s inventory:" << endl;
         for (Entity* item : inventory) {
-            cout << item->getName() << endl;
+            cout << item->getName() << ", " << item->getHP() << endl;
         }
     }
 
@@ -183,8 +192,8 @@ public:
 
 private:
     int calculateDamage(Entity* attacker, Entity* defender) {
-        int baseDamage = rand() % 10 + 1;
-        double multiplier = 1.0;
+        int baseDamage = (rand() % 2) + 2;
+        double multiplier = 1.5;
 
         for (const Component* aComp : attacker->getComponents()) {
             for (const Component* dComp : defender->getComponents()) {
@@ -226,6 +235,18 @@ int main() {
     Component plastic("Plastic");
     Component conceptual("Conceptual");
     Component light("Light");
+
+    //Organizes Components by map
+    map<int, Component*> components;
+    components[1] = &rock;
+    components[2] = &metal;
+    components[3] = &fire;
+    components[4] = &electric;
+    components[5] = &organic;
+    components[6] = &plastic;
+    components[7] = &conceptual;
+    components[8] = &light;
+
 
     EntityManager entityManager;
 
@@ -296,9 +317,9 @@ int main() {
     System System;
 
     Actor enemy1("Kaleb", 1);
-    Actor enemy2("Salmn", 2);
+    Actor enemy2("Salmon", 2);
     Actor enemy3("Ibi", 3); //change this, or not idk
-    
+
     //for loop to assign items to enemies 
     // Player Chooses 5 cards at start of game...
     System.assignEnemyItems(enemy1, entityManager, 5);   // Enemy1: Starts with 5 cards
@@ -307,6 +328,8 @@ int main() {
 
     System.assignEnemyItems(enemy1, entityManager, 12);  // Enemy3: Starts with 12 cards
 
+    cout << "Welcome to the ECS Battle Simulator!" << endl;
+
 
     cout << "Please input your name: ";
     string playerName;
@@ -314,21 +337,68 @@ int main() {
 
     Actor player(playerName, 0);
 
-    /*for (Entity* e : entityManager.getEntities()) {
-        player.addItemToInventory(e);
-    }*/
-    
-    player.printInventory();
 
+start:
+    //Player chooses variable items to store
+    int playerChoice;
+    cout << "How many items would you like to store? (Choose up to 5): ";
+    cin >> playerChoice;
 
-    cout << "Welcome to the ECS Battle Simulator!" << endl;
-    cout << "Choose 5 items to store, you'll fight with these items against 3 opponents:" << endl;
+    if (!playerChoice < 5 && !playerChoice > 1)
+    {
+        cout << "Invalid choice, please choose again." << endl;
+        goto start;
+    }
+    system("CLS");
 
-    //function where player creates 5 new items to store
+    cout << "Enter " << playerChoice << " items to store, you'll fight with these items against 3 opponents:" << endl;
 
-    cout << "You will fight against 3 opponents, beat them and get their items for your next battle!" << endl << "Good Luck!" << endl;
+    string itemChoice;
+    Entity* playerItem[6] = {};
+    system("CLS");
+    for (int i = 0; i < playerChoice; i++)
+    {
+        cout << "Choose item " << i + 1 << ": ";
+        cin >> itemChoice;
 
+        playerItem[i] = { entityManager.createEntity(itemChoice, (rand() % 3) + 5, 0) };
+        player.addItemToInventory(playerItem[i]);
+        playerItem[i]->addComponent(components[rand() % 8 + 1]);
+        playerItem[i]->print();
+    }
+    cout << "Press any key to continue..." << endl;
+    _getch();
     // Implement battle sequences here
+
+    // Battle 1
+    int cardChoice;
+    cout << "BATTLE OCCURS" << endl;
+    while (player.getInventory().size() > 0 && enemy1.getInventory().size() > 0)
+    {
+        auto random = rand() % enemy1.getInventory().size();
+        cout << "Choose a card to play: " << endl;
+        cin >> cardChoice;
+        System.update(player.getInventory()[cardChoice - 1], enemy1.getInventory()[random]);
+        if (player.getInventory().at(cardChoice - 1)->getHP() <= 0)
+        {
+            player.removeItemFromInventory(playerItem[cardChoice - 1]);
+            player.printInventory();
+        }
+        else
+        {
+            enemy1.removeItemFromInventory(enemy1.getInventory()[random]);
+            player.printInventory();
+        }
+    }
+    if (enemy1.getInventory().size() == 0)
+    {
+        System.transferItems(&player, &enemy1);
+    }
+    else if (player.getInventory().size() == 0)
+    {
+        cout << "you died" << endl;
+    }
+
 
     cout << "Congratulations! You have won the game!" << endl;
 
