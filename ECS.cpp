@@ -4,6 +4,7 @@
 #include <ctime>
 #include <algorithm>
 #include <map>
+#include <conio.h>
 
 using namespace std;
 
@@ -340,17 +341,25 @@ int main() {
     //Player chooses variable items to store
     int playerChoice = 0;
 
-    while (playerChoice <= 0 || playerChoice >= 6)
-    {
+    while (playerChoice <= 0 || playerChoice >= 6) {
         cout << "How many items would you like to store? (Choose up to 5): ";
         cin >> playerChoice;
 
-        if (playerChoice < 5 || playerChoice > 1)
-        {
+        if (cin.fail()) {
+            // If the input is not an integer, clear the error and ignore the rest of the line
+            cin.clear(); // Clear the error flag
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore the rest of the input
+            cout << "Invalid choice, please enter a number." << endl;
+        }
+        else if (playerChoice <= 0 || playerChoice > 5) {
             cout << "Invalid choice, please choose again." << endl;
         }
     }
+
+    
+
     system("CLS");
+    cout << "You chose to store " << playerChoice << " items." << endl;
 
     cout << "Enter " << playerChoice << " items to store, you'll fight with these items against 3 opponents:" << endl;
 
@@ -359,6 +368,7 @@ int main() {
     system("CLS");
     for (int i = 0; i < playerChoice; i++)
     {
+
         cout << "Choose item " << i + 1 << ": ";
         cin >> itemChoice;
 
@@ -368,6 +378,8 @@ int main() {
         playerItem[i]->print();
     }
     cout << "Press any key to continue..." << endl;
+    _getch();
+	system("CLS");
    
     // Implement battle sequences here  
 
