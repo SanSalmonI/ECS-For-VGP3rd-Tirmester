@@ -337,16 +337,18 @@ int main() {
     Actor player(playerName, 0);
 
 
-start:
     //Player chooses variable items to store
-    int playerChoice;
-    cout << "How many items would you like to store? (Choose up to 5): ";
-    cin >> playerChoice;
+    int playerChoice = 0;
 
-    if (playerChoice < 5 && playerChoice > 1)
+    while (playerChoice <= 0 || playerChoice >= 6)
     {
-        cout << "Invalid choice, please choose again." << endl;
-        goto start;
+        cout << "How many items would you like to store? (Choose up to 5): ";
+        cin >> playerChoice;
+
+        if (playerChoice < 5 || playerChoice > 1)
+        {
+            cout << "Invalid choice, please choose again." << endl;
+        }
     }
     system("CLS");
 
