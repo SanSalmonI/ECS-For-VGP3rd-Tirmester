@@ -336,7 +336,7 @@ start:
     cout << "How many items would you like to store? (Choose up to 5): ";
     cin >> playerChoice;
 
-    if (playerChoice > 5)
+    if (playerChoice > 5 || playerChoice < 1)
     {
 		cout << "Invalid choice, please choose again." << endl;
 		goto start;
