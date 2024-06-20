@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <cstdlib>
 #include <ctime>
+#include <algorithm>
+#include <map>
+#include <conio.h>
 
 using namespace std;
 
@@ -23,9 +25,10 @@ private:
     vector<Component*> components;
     string name;
     int hp;
+    int ownerID;
 
 public:
-    Entity(const string& name, int hp) : name(name), hp(hp) {}
+    Entity(const string& name, int hp, int ownerID) : name(name), hp(hp), ownerID(ownerID) {}
 
     void addComponent(Component* c) {
         components.push_back(c);
@@ -53,8 +56,90 @@ public:
         return name;
     }
 
+    int getOwnerID() const {
+        return ownerID;
+    }
+
+    void setOwnerID(int newOwnerID) {
+        ownerID = newOwnerID;
+    }
+
     const vector<Component*>& getComponents() const {
         return components;
+    }
+};
+
+class EntityManager {
+private:
+    vector<Entity*> entities;
+
+public:
+    ~EntityManager() {
+        for (Entity* e : entities) {
+            delete e;
+        }
+    }
+
+    Entity* createEntity(const string& name, int hp, int ownerID) {
+        Entity* e = new Entity(name, hp, ownerID);
+        entities.push_back(e);
+        return e;
+    }
+
+    const vector<Entity*>& getEntities() const {
+        return entities;
+    }
+
+    Entity* findEntityByName(const string& name) {
+        for (Entity* entity : entities) {
+            if (entity->getName() == name) {
+                return entity;
+            }
+        }
+        return nullptr;
+    }
+};
+
+class Actor {
+private:
+    string name;
+    vector<Entity*> inventory;
+    int ownerID;
+
+public:
+    Actor(const string& name, int ownerID) : name(name), ownerID(ownerID) {}
+
+    string getName() const {
+        return name;
+    }
+
+    void removeItemFromInventory(Entity* item) {
+        for (auto it = inventory.begin(); it != inventory.end(); ++it) {
+            if (*it == item) {
+                inventory.erase(it);
+                break;
+            }
+        }
+    }
+
+    void addItemToInventory(Entity* item) {
+        item->setOwnerID(ownerID);
+        inventory.push_back(item);
+    }
+
+    void printInventory() const {
+        cout << name << "'s inventory:" << endl;
+        for (Entity* item : inventory) {
+            cout << item->getName() << ", " << item->getHP() << endl;
+        }
+    }
+
+    int getOwnerID() const {
+        return ownerID;
+    }
+
+    const vector<Entity*>& getInventory() const {
+        return inventory;
     }
 };
 
@@ -87,10 +172,28 @@ public:
         }
     }
 
+    void transferItems(Actor* winner, Actor* loser) {
+        for (Entity* item : loser->getInventory()) {
+            winner->addItemToInventory(item);
+        }
+    }
+
+    void assignEnemyItems(Actor& enemy, EntityManager& enemyAssign, int entityAssigned) {
+
+        vector <Entity*> entityAvailible = enemyAssign.getEntities();
+
+        random_shuffle(entityAvailible.begin(), entityAvailible.end());
+
+        for (int i = 0; i < entityAssigned && i < entityAvailible.size(); i++)
+        {
+            enemy.addItemToInventory(entityAvailible[i]);
+        }
+    }
+
 private:
     int calculateDamage(Entity* attacker, Entity* defender) {
-        int baseDamage = rand() % 10 + 1;
-        double multiplier = 1.0;
+        int baseDamage = (rand() % 2) + 2;
+        double multiplier = 1.5;
 
         for (const Component* aComp : attacker->getComponents()) {
             for (const Component* dComp : defender->getComponents()) {
@@ -121,28 +224,6 @@ private:
     }
 };
 
-class EntityManager {
-private:
-    vector<Entity*> entities;
-
-public:
-    ~EntityManager() {
-        for (Entity* e : entities) {
-            delete e;
-        }
-    }
-
-    Entity* createEntity(const string& name, int hp) {
-        Entity* entity = new Entity(name, hp);
-        entities.push_back(entity);
-        return entity;
-    }
-
-    const vector<Entity*>& getEntities() const {
-        return entities;
-    }
-};
-
 int main() {
     srand(static_cast<unsigned int>(time(0)));
 
@@ -155,83 +236,171 @@ int main() {
     Component conceptual("Conceptual");
     Component light("Light");
 
+    //Organizes Components by map
+    map<int, Component*> components;
+    components[1] = &rock;
+    components[2] = &metal;
+    components[3] = &fire;
+    components[4] = &electric;
+    components[5] = &organic;
+    components[6] = &plastic;
+    components[7] = &conceptual;
+    components[8] = &light;
+
+
     EntityManager entityManager;
 
-    Entity* entity1 = entityManager.createEntity("Marble Statue", 5);
-	Entity* entityRock1 = entityManager.createEntity("Diamond", 10);
-	Entity* entityRock2 = entityManager.createEntity("Dumbell", 8);
+    Entity* entity1 = entityManager.createEntity("Marble Statue", 5, 0);
+    Entity* entityRock1 = entityManager.createEntity("Diamond", 10, 0);
+    Entity* entityRock2 = entityManager.createEntity("Dumbell", 8, 0);
 
-    Entity* entity2 = entityManager.createEntity("Soda Can", 6);
-	Entity* entityMetal1 = entityManager.createEntity("Car", 9);
-	Entity* entityMetal2 = entityManager.createEntity("Pocket Knife", 7);
+    Entity* entity2 = entityManager.createEntity("Soda Can", 6, 0);
+    Entity* entityMetal1 = entityManager.createEntity("Car", 9, 0);
+    Entity* entityMetal2 = entityManager.createEntity("Pocket Knife", 7, 0);
 
-    Entity* entity3 = entityManager.createEntity("Bic Lighter", 4);
-	Entity* entityFire1 = entityManager.createEntity("Grill", 8);
-	Entity* entityFire2 = entityManager.createEntity("Smooore", 6);
+    Entity* entity3 = entityManager.createEntity("Bic Lighter", 4, 0);
+    Entity* entityFire1 = entityManager.createEntity("Grill", 8, 0);
+    Entity* entityFire2 = entityManager.createEntity("Smooore", 6, 0);
 
-	Entity* entity4 = entityManager.createEntity("Puppy", 7);
-	Entity* entityOrganic1 = entityManager.createEntity("Tadpole", 10);
-	Entity* entityOrganic2 = entityManager.createEntity("Pond scum", 6);
+    Entity* entity4 = entityManager.createEntity("Puppy", 7, 0);
+    Entity* entityOrganic1 = entityManager.createEntity("Tadpole", 10, 0);
+    Entity* entityOrganic2 = entityManager.createEntity("Pond scum", 6, 0);
 
-	Entity* entity5 = entityManager.createEntity("CPU", 8);
-	Entity* entityElectric1 = entityManager.createEntity("Taser", 10);
-	Entity* entityElectric2 = entityManager.createEntity("Microwave", 7);
+    Entity* entity5 = entityManager.createEntity("CPU", 8, 0);
+    Entity* entityElectric1 = entityManager.createEntity("Taser", 10, 0);
+    Entity* entityElectric2 = entityManager.createEntity("Microwave", 7, 0);
 
+    Entity* entity6 = entityManager.createEntity("Lawn Chair", 9, 0);
+    Entity* entityPlastic1 = entityManager.createEntity("Coathanger", 10, 0);
+    Entity* entityPlastic2 = entityManager.createEntity("Plastic Bag", 7, 0);
 
-	Entity* entity6 = entityManager.createEntity("Lawn Chair", 9);
-	Entity* entityPlastic1 = entityManager.createEntity("Coathanger", 10);
-	Entity* entityPlastic2 = entityManager.createEntity("Plastic Bag", 7);
+    Entity* entity7 = entityManager.createEntity("Stock Trade", 5, 0);
+    Entity* entityConcept1 = entityManager.createEntity("Internet", 6, 0);
+    Entity* entityConcept2 = entityManager.createEntity("Patent", 8, 0);
 
-	Entity* entity7 = entityManager.createEntity("Stock Trade", 5); 
-	Entity* entityConcept1 = entityManager.createEntity("Internet", 6);
-	Entity* entityConcept2 = entityManager.createEntity("Patent", 8);
-
-	Entity* entity8 = entityManager.createEntity("Lightbulb", 6);
-	Entity* entityLight1 = entityManager.createEntity("Laser", 10);
-	Entity* entityLight2 = entityManager.createEntity("Flashlight", 7);
+    Entity* entity8 = entityManager.createEntity("Lightbulb", 6, 0);
+    Entity* entityLight1 = entityManager.createEntity("Laser", 10, 0);
+    Entity* entityLight2 = entityManager.createEntity("Flashlight", 7, 0);
 
     entity1->addComponent(&rock);
     entityRock1->addComponent(&rock);
-	entityRock2->addComponent(&rock);
-
+    entityRock2->addComponent(&rock);
 
     entity2->addComponent(&metal);
-	entityMetal1->addComponent(&metal);
+    entityMetal1->addComponent(&metal);
     entityMetal2->addComponent(&metal);
 
-
     entity3->addComponent(&fire);
-	entityFire1->addComponent(&fire);
-	entityFire2->addComponent(&fire);
+    entityFire1->addComponent(&fire);
+    entityFire2->addComponent(&fire);
 
-	entity4->addComponent(&organic);
-	entityOrganic1->addComponent(&organic);
-	entityOrganic2->addComponent(&organic);
+    entity4->addComponent(&organic);
+    entityOrganic1->addComponent(&organic);
+    entityOrganic2->addComponent(&organic);
 
-	entity5->addComponent(&electric);
-	entityElectric1->addComponent(&electric);
-	entityElectric2->addComponent(&electric);
+    entity5->addComponent(&electric);
+    entityElectric1->addComponent(&electric);
+    entityElectric2->addComponent(&electric);
 
-	entity6->addComponent(&plastic);
-	entityPlastic1->addComponent(&plastic);
-	entityPlastic2->addComponent(&plastic);
+    entity6->addComponent(&plastic);
+    entityPlastic1->addComponent(&plastic);
+    entityPlastic2->addComponent(&plastic);
 
-	entity7->addComponent(&conceptual);
-	entityConcept1->addComponent(&conceptual);
-	entityConcept2->addComponent(&conceptual);
+    entity7->addComponent(&conceptual);
+    entityConcept1->addComponent(&conceptual);
+    entityConcept2->addComponent(&conceptual);
 
-	entity8->addComponent(&light);
-	entityLight1->addComponent(&light);
-	entityLight2->addComponent(&light);
+    entity8->addComponent(&light);
+    entityLight1->addComponent(&light);
+    entityLight2->addComponent(&light);
+
+    System System;
+
+    Actor enemy1("Kaleb", 1);
+    Actor enemy2("Salmon", 2);
+    Actor enemy3("Ibi", 3); //change this, or not idk
+
+    //for loop to assign items to enemies 
+    // Player Chooses 5 cards at start of game...
+    System.assignEnemyItems(enemy1, entityManager, 5);   // Enemy1: Starts with 5 cards
+
+    System.assignEnemyItems(enemy1, entityManager, 9);   // Enemy2: Starts with 9 cards
+
+    System.assignEnemyItems(enemy1, entityManager, 12);  // Enemy3: Starts with 12 cards
+
+    cout << "Welcome to the ECS Battle Simulator!" << endl;
 
 
+    cout << "Please input your name: ";
+    string playerName;
+    cin >> playerName;
+
+    Actor player(playerName, 0);
 
 
-    System battleSystem;
+start:
+    //Player chooses variable items to store
+    int playerChoice;
+    cout << "How many items would you like to store? (Choose up to 5): ";
+    cin >> playerChoice;
 
-    battleSystem.update(entity1, entity2);
-    battleSystem.update(entity2, entity3);
-    battleSystem.update(entity3, entity1);
+    if (!playerChoice < 5 && !playerChoice > 1)
+    {
+        cout << "Invalid choice, please choose again." << endl;
+        goto start;
+    }
+    system("CLS");
+
+    cout << "Enter " << playerChoice << " items to store, you'll fight with these items against 3 opponents:" << endl;
+
+    string itemChoice;
+    Entity* playerItem[6] = {};
+    system("CLS");
+    for (int i = 0; i < playerChoice; i++)
+    {
+        cout << "Choose item " << i + 1 << ": ";
+        cin >> itemChoice;
+
+        playerItem[i] = { entityManager.createEntity(itemChoice, (rand() % 3) + 5, 0) };
+        player.addItemToInventory(playerItem[i]);
+        playerItem[i]->addComponent(components[rand() % 8 + 1]);
+        playerItem[i]->print();
+    }
+    cout << "Press any key to continue..." << endl;
+    _getch();
+    // Implement battle sequences here
+
+    // Battle 1
+    int cardChoice;
+    cout << "BATTLE OCCURS" << endl;
+    while (player.getInventory().size() > 0 && enemy1.getInventory().size() > 0)
+    {
+        auto random = rand() % enemy1.getInventory().size();
+        cout << "Choose a card to play: " << endl;
+        cin >> cardChoice;
+        System.update(player.getInventory()[cardChoice - 1], enemy1.getInventory()[random]);
+        if (player.getInventory().at(cardChoice - 1)->getHP() <= 0)
+        {
+            player.removeItemFromInventory(playerItem[cardChoice - 1]);
+            player.printInventory();
+        }
+        else
+        {
+            enemy1.removeItemFromInventory(enemy1.getInventory()[random]);
+            player.printInventory();
+        }
+    }
+    if (enemy1.getInventory().size() == 0)
+    {
+        System.transferItems(&player, &enemy1);
+    }
+    else if (player.getInventory().size() == 0)
+    {
+        cout << "you died" << endl;
+    }
+
+
+    cout << "Congratulations! You have won the game!" << endl;
 
     return 0;
 }
