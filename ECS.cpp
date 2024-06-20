@@ -113,16 +113,14 @@ public:
         return name;
     }
 
-    //Removes item from inventory
     void removeItemFromInventory(Entity* item) {
-        for (int i = 0; i < inventory.size(); i++) {
-            if (inventory[i] == item) {
-				inventory.erase(inventory.begin() + i);
-				break;
-			}
-		}
+        for (auto it = inventory.begin(); it != inventory.end(); ++it) {
+            if (*it == item) {
+                inventory.erase(it);
+                break;
+            }
+        }
     }
-
 
     void addItemToInventory(Entity* item) {
         item->setOwnerID(ownerID);
@@ -227,7 +225,6 @@ private:
 };
 
 int main() {
-    bool winorlose = false;
     srand(static_cast<unsigned int>(time(0)));
 
     Component rock("Rock");
@@ -324,11 +321,12 @@ int main() {
     Actor enemy3("Ibi", 3); //change this, or not idk
 
     //for loop to assign items to enemies 
-System.assignEnemyItems(enemy1, entityManager, 2);   // Enemy1: Starts with 5 cards
-//unused feature
-System.assignEnemyItems(enemy2, entityManager, 9);   // Enemy2: Starts with 9 cards
-//unused feature
-System.assignEnemyItems(enemy3, entityManager, 12);  // Enemy3: Starts with 12 cards
+    // Player Chooses 5 cards at start of game...
+    //System.assignEnemyItems(enemy1, entityManager, 5);   // Enemy1: Starts with 5 cards
+
+    //System.assignEnemyItems(enemy1, entityManager, 9);   // Enemy2: Starts with 9 cards
+
+    //System.assignEnemyItems(enemy1, entityManager, 12);  // Enemy3: Starts with 12 cards
 
     cout << "Welcome to the ECS Battle Simulator!" << endl;
 
@@ -339,20 +337,29 @@ System.assignEnemyItems(enemy3, entityManager, 12);  // Enemy3: Starts with 12 c
 
     Actor player(playerName, 0);
 
+
     //Player chooses variable items to store
     int playerChoice = 0;
 
-    while (playerChoice <= 0 || playerChoice >= 6)
-    {
+    while (playerChoice <= 0 || playerChoice >= 6) {
         cout << "How many items would you like to store? (Choose up to 5): ";
         cin >> playerChoice;
 
-        if (playerChoice < 5 || playerChoice > 1)
-        {
+        if (cin.fail()) {
+            // If the input is not an integer, clear the error and ignore the rest of the line
+            cin.clear(); // Clear the error flag
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore the rest of the input
+            cout << "Invalid choice, please enter a number." << endl;
+        }
+        else if (playerChoice <= 0 || playerChoice > 5) {
             cout << "Invalid choice, please choose again." << endl;
         }
     }
+
+    
+
     system("CLS");
+    cout << "You chose to store " << playerChoice << " items." << endl;
 
     cout << "Enter " << playerChoice << " items to store, you'll fight with these items against 3 opponents:" << endl;
 
@@ -361,17 +368,19 @@ System.assignEnemyItems(enemy3, entityManager, 12);  // Enemy3: Starts with 12 c
     system("CLS");
     for (int i = 0; i < playerChoice; i++)
     {
+
         cout << "Choose item " << i + 1 << ": ";
         cin >> itemChoice;
 
-        playerItem[i] = { entityManager.createEntity(itemChoice, (rand() % 5) + 5, 0) };
+        playerItem[i] = { entityManager.createEntity(itemChoice, (rand() % 3) + 5, 0) };
         player.addItemToInventory(playerItem[i]);
         playerItem[i]->addComponent(components[rand() % 8 + 1]);
         playerItem[i]->print();
     }
     cout << "Press any key to continue..." << endl;
     _getch();
-    system("CLS");
+	system("CLS");
+   
     // Implement battle sequences here  
 
     // Battle 1
@@ -379,19 +388,16 @@ System.assignEnemyItems(enemy3, entityManager, 12);  // Enemy3: Starts with 12 c
     cout << "BATTLE OCCURS" << endl;
     while (player.getInventory().size() > 0 && enemy1.getInventory().size() > 0)
     {
-        player.printInventory();
-        cout << endl;
-        enemy1.printInventory();
-        cout << endl;
-        auto random = (rand() % enemy1.getInventory().size());
+        auto random = (rand() % enemy1.getInventory().size()) - 1;
         cout << "Choose a card to play: " << endl;
         cin >> cardChoice;
-        System.update(player.getInventory()[cardChoice - 1], enemy1.getInventory()[random]);
-        if (player.getInventory().at(cardChoice - 1)->getHP() <= 0) // Removes player Item
+        System.update(player.getInventory()[cardChoice ], enemy1.getInventory()[random]);
+        if (player.getInventory().at(cardChoice)->getHP() <= 0)
         {
-            player.removeItemFromInventory(playerItem[cardChoice - 1]);
+            player.removeItemFromInventory(playerItem[cardChoice]);
+            player.printInventory();
         }
-        else if (enemy1.getInventory().at(random)->getHP() <= 0) //Removes enemy item
+        else if (enemy1.getInventory().at(cardChoice)->getHP() <= 0)
         {
             enemy1.removeItemFromInventory(enemy1.getInventory()[random]);
         }
@@ -399,8 +405,18 @@ System.assignEnemyItems(enemy3, entityManager, 12);  // Enemy3: Starts with 12 c
         {
             enemy1.removeItemFromInventory(enemy1.getInventory()[random]);
 
-            player.removeItemFromInventory(playerItem[cardChoice - 1]);
+            player.removeItemFromInventory(playerItem[cardChoice]);
+            player.printInventory();
         }
+    }
+
+    if (enemy1.getInventory().size() == 0)
+    {
+        System.transferItems(&player, &enemy1);
+    }
+    else if (player.getInventory().size() == 0)
+    {
+        cout << "you died" << endl;
     }
 
     // Implement an 'Invalid Option, Item was destroyed' if statement
@@ -408,21 +424,9 @@ System.assignEnemyItems(enemy3, entityManager, 12);  // Enemy3: Starts with 12 c
 
     // Items do not get destroyed at some instances, and stay on -1 health, fix for removeitemfrominventory func? or something else?  
 
-    if (enemy1.getInventory().size() == 0)
-    {
-        cout << "You have defeated the enemy!" << endl;
-        winorlose = true;
-	}
-    else if(player.getInventory().size() == 0)
-    {
-		cout << "You have been defeated by enemy 1!" << endl;
-	}   
 
 
-    if(winorlose == true)
     cout << "Congratulations! You have won the game!" << endl;
-    else
-        cout << "You have lost the game!" << endl;
 
     return 0;
 }
