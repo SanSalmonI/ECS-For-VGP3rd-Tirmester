@@ -340,15 +340,20 @@ System.assignEnemyItems(enemy3, entityManager, 12);  // Enemy3: Starts with 12 c
     Actor player(playerName, 0);
 
     //Player chooses variable items to store
+
     int playerChoice = 0;
 
-    while (playerChoice <= 0 || playerChoice >= 6)
-    {
+    while (playerChoice <= 0  || playerChoice >= 6) {
         cout << "How many items would you like to store? (Choose up to 5): ";
         cin >> playerChoice;
 
-        if (playerChoice < 5 || playerChoice > 1)
-        {
+        if (cin.fail()) {
+            // If the input is not an integer, clear the error and ignore the rest of the line
+            cin.clear(); // Clear the error flag
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore the rest of the input
+            cout << "Invalid choice, please enter a number." << endl;
+        }
+        else if (playerChoice <= 0  || playerChoice > 5) {
             cout << "Invalid choice, please choose again." << endl;
         }
     }
@@ -379,6 +384,7 @@ System.assignEnemyItems(enemy3, entityManager, 12);  // Enemy3: Starts with 12 c
     cout << "BATTLE OCCURS" << endl;
     while (player.getInventory().size() > 0 && enemy1.getInventory().size() > 0)
     {
+        cout << endl;
         player.printInventory();
         cout << endl;
         enemy1.printInventory();
@@ -386,6 +392,7 @@ System.assignEnemyItems(enemy3, entityManager, 12);  // Enemy3: Starts with 12 c
         auto random = (rand() % enemy1.getInventory().size());
         cout << "Choose a card to play: " << endl;
         cin >> cardChoice;
+        cout << endl;
         System.update(player.getInventory()[cardChoice - 1], enemy1.getInventory()[random]);
         if (player.getInventory().at(cardChoice - 1)->getHP() <= 0) // Removes player Item
         {
