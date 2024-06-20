@@ -1,0 +1,4 @@
+﻿  ECS.cpp
+C:\Users\imbah\source\repos\ECS_semifinal_branch\ECS.cpp(347,9): warning C4804: '<': unsafe use of type 'bool' in operation
+C:\Users\imbah\source\repos\ECS_semifinal_branch\ECS.cpp(347,30): warning C4804: '>': unsafe use of type 'bool' in operation
+  Project21.vcxproj -> C:\Users\imbah\source\repos\ECS_semifinal_branch\x64\Debug\Project21.exe
