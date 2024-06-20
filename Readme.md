@@ -64,6 +64,9 @@ ii)   The vectors and classes: including so many list types makes it hard to kee
 iii)  General bug fixing and error solving: Just the general inability to sometimes wrap our head around a few logic errors and whatnot.
 
 The Game: ECS Battle Simulator
+
+
+
 How It Plays
 The game is a turn-based battle simulator where the player selects items to store and battles against three enemy actors. Each battle involves selecting an entity to attack with and calculating the outcome based on the entities' components.
 
