@@ -1,3 +1,4 @@
 ﻿  ECS.cpp
-C:\Users\ssalm\source\repos\Project21\ECS-For-VGP3rd-Tirmester\ECS.cpp(276,12): warning C4101: 'battleSystem': unreferenced local variable
-  Project21.vcxproj -> C:\Users\ssalm\source\repos\Project21\ECS-For-VGP3rd-Tirmester\x64\Debug\Project21.exe
+C:\Users\Ibrahim\Documents\GitHub\ECS-For-VGP3rd-Tirmester\ECS.cpp(347,9): warning C4804: '<': unsafe use of type 'bool' in operation
+C:\Users\Ibrahim\Documents\GitHub\ECS-For-VGP3rd-Tirmester\ECS.cpp(347,30): warning C4804: '>': unsafe use of type 'bool' in operation
+  Project21.vcxproj -> C:\Users\Ibrahim\Documents\GitHub\ECS-For-VGP3rd-Tirmester\x64\Debug\Project21.exe

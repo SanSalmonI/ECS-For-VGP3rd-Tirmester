@@ -375,7 +375,7 @@ start:
     cout << "BATTLE OCCURS" << endl;
     while (player.getInventory().size() > 0 && enemy1.getInventory().size() > 0)
     {
-        auto random = rand() % enemy1.getInventory().size();
+        auto random = (rand() % enemy1.getInventory().size()) - 1;
         cout << "Choose a card to play: " << endl;
         cin >> cardChoice;
         System.update(player.getInventory()[cardChoice - 1], enemy1.getInventory()[random]);
@@ -384,9 +384,15 @@ start:
             player.removeItemFromInventory(playerItem[cardChoice - 1]);
             player.printInventory();
         }
-        else
+        else if (enemy1.getInventory().at(cardChoice - 1)->getHP() <= 0)
         {
             enemy1.removeItemFromInventory(enemy1.getInventory()[random]);
+        }
+        else 
+        {
+            enemy1.removeItemFromInventory(enemy1.getInventory()[random]);
+
+            player.removeItemFromInventory(playerItem[cardChoice - 1]);
             player.printInventory();
         }
     }
@@ -399,6 +405,10 @@ start:
         cout << "you died" << endl;
     }
 
+    // Implement an 'Invalid Option, Item was destroyed' if statement
+    // Fix the error when user selects an item out of the inventories range... 
+
+    // Items do not get destroyed at some instances, and stay on -1 health, fix for removeitemfrominventory func? or something else?  
 
     cout << "Congratulations! You have won the game!" << endl;
 
