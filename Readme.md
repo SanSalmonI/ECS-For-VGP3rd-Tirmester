@@ -65,12 +65,15 @@ iii)  General bug fixing and error solving: Just the general inability to someti
 
 The Game: ECS Battle Simulator
 
-
+![RockPaperSpockTrailer_1](https://github.com/SanSalmonI/ECS-For-VGP3rd-Tirmester/assets/171985375/5eb0fe6c-5e58-4dee-88fb-ad9d57d6edfe)
 
 How It Plays
 The game is a turn-based battle simulator where the player selects items to store and battles against three enemy actors. Each battle involves selecting an entity to attack with and calculating the outcome based on the entities' components.
 
+![RockPaperSpockTrailer_2](https://github.com/SanSalmonI/ECS-For-VGP3rd-Tirmester/assets/171985375/72e8ce6c-cd40-45bb-951d-08fbd3bc9f9e)
+
 Benefits from ECS
+
 The ECS architecture allows for:
 
 Modularity: Easily adding or modifying components and systems without affecting the overall game structure, we took full advantage of this by making a came about creating classes, by making the player inventory is full of items that have their own components.
@@ -83,3 +86,5 @@ The game can be scaled by:
 - Adding More Components: Introducing new components to diversify entity attributes, these have a type, name, and HP.
 - Expanding Systems: the game can easily be modified to add crafting, trading, or exploring.
 - Increasing Entity Variety: Designing more entities with unique combinations of components to add complexity to the type hirarchy.
+
+
