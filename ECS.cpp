@@ -4,6 +4,7 @@
 #include <ctime>
 #include <algorithm>
 #include <map>
+#include <conio.h>
 
 using namespace std;
 
@@ -112,14 +113,16 @@ public:
         return name;
     }
 
+    //Removes item from inventory
     void removeItemFromInventory(Entity* item) {
-        for (auto it = inventory.begin(); it != inventory.end(); ++it) {
-            if (*it == item) {
-                inventory.erase(it);
-                break;
-            }
-        }
+        for (int i = 0; i < inventory.size(); i++) {
+            if (inventory[i] == item) {
+				inventory.erase(inventory.begin() + i);
+				break;
+			}
+		}
     }
+
 
     void addItemToInventory(Entity* item) {
         item->setOwnerID(ownerID);
@@ -224,6 +227,7 @@ private:
 };
 
 int main() {
+    bool winorlose = false;
     srand(static_cast<unsigned int>(time(0)));
 
     Component rock("Rock");
@@ -320,12 +324,11 @@ int main() {
     Actor enemy3("Ibi", 3); //change this, or not idk
 
     //for loop to assign items to enemies 
-    // Player Chooses 5 cards at start of game...
-    //System.assignEnemyItems(enemy1, entityManager, 5);   // Enemy1: Starts with 5 cards
-
-    //System.assignEnemyItems(enemy1, entityManager, 9);   // Enemy2: Starts with 9 cards
-
-    //System.assignEnemyItems(enemy1, entityManager, 12);  // Enemy3: Starts with 12 cards
+System.assignEnemyItems(enemy1, entityManager, 2);   // Enemy1: Starts with 5 cards
+//unused feature
+System.assignEnemyItems(enemy2, entityManager, 9);   // Enemy2: Starts with 9 cards
+//unused feature
+System.assignEnemyItems(enemy3, entityManager, 12);  // Enemy3: Starts with 12 cards
 
     cout << "Welcome to the ECS Battle Simulator!" << endl;
 
@@ -335,7 +338,6 @@ int main() {
     cin >> playerName;
 
     Actor player(playerName, 0);
-
 
     //Player chooses variable items to store
     int playerChoice = 0;
@@ -362,13 +364,14 @@ int main() {
         cout << "Choose item " << i + 1 << ": ";
         cin >> itemChoice;
 
-        playerItem[i] = { entityManager.createEntity(itemChoice, (rand() % 3) + 5, 0) };
+        playerItem[i] = { entityManager.createEntity(itemChoice, (rand() % 5) + 5, 0) };
         player.addItemToInventory(playerItem[i]);
         playerItem[i]->addComponent(components[rand() % 8 + 1]);
         playerItem[i]->print();
     }
     cout << "Press any key to continue..." << endl;
-   
+    _getch();
+    system("CLS");
     // Implement battle sequences here  
 
     // Battle 1
@@ -376,16 +379,19 @@ int main() {
     cout << "BATTLE OCCURS" << endl;
     while (player.getInventory().size() > 0 && enemy1.getInventory().size() > 0)
     {
-        auto random = (rand() % enemy1.getInventory().size()) - 1;
+        player.printInventory();
+        cout << endl;
+        enemy1.printInventory();
+        cout << endl;
+        auto random = (rand() % enemy1.getInventory().size());
         cout << "Choose a card to play: " << endl;
         cin >> cardChoice;
-        System.update(player.getInventory()[cardChoice ], enemy1.getInventory()[random]);
-        if (player.getInventory().at(cardChoice)->getHP() <= 0)
+        System.update(player.getInventory()[cardChoice - 1], enemy1.getInventory()[random]);
+        if (player.getInventory().at(cardChoice - 1)->getHP() <= 0) // Removes player Item
         {
-            player.removeItemFromInventory(playerItem[cardChoice]);
-            player.printInventory();
+            player.removeItemFromInventory(playerItem[cardChoice - 1]);
         }
-        else if (enemy1.getInventory().at(cardChoice)->getHP() <= 0)
+        else if (enemy1.getInventory().at(random)->getHP() <= 0) //Removes enemy item
         {
             enemy1.removeItemFromInventory(enemy1.getInventory()[random]);
         }
@@ -393,18 +399,8 @@ int main() {
         {
             enemy1.removeItemFromInventory(enemy1.getInventory()[random]);
 
-            player.removeItemFromInventory(playerItem[cardChoice]);
-            player.printInventory();
+            player.removeItemFromInventory(playerItem[cardChoice - 1]);
         }
-    }
-
-    if (enemy1.getInventory().size() == 0)
-    {
-        System.transferItems(&player, &enemy1);
-    }
-    else if (player.getInventory().size() == 0)
-    {
-        cout << "you died" << endl;
     }
 
     // Implement an 'Invalid Option, Item was destroyed' if statement
@@ -412,9 +408,21 @@ int main() {
 
     // Items do not get destroyed at some instances, and stay on -1 health, fix for removeitemfrominventory func? or something else?  
 
+    if (enemy1.getInventory().size() == 0)
+    {
+        cout << "You have defeated the enemy!" << endl;
+        winorlose = true;
+	}
+    else if(player.getInventory().size() == 0)
+    {
+		cout << "You have been defeated by enemy 1!" << endl;
+	}   
 
 
+    if(winorlose == true)
     cout << "Congratulations! You have won the game!" << endl;
+    else
+        cout << "You have lost the game!" << endl;
 
     return 0;
 }
